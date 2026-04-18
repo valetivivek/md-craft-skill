@@ -16,16 +16,30 @@ It is for maintainers who already have a tone in their repo and don't want it ov
 
 ## Install
 
+### Claude Code
+
 ```bash
 /plugin marketplace add valetivivek/md-craft-skill
 /plugin install md-craft@md-craft-marketplace
 ```
 
-To update later:
+Update later:
 
 ```bash
 /plugin marketplace update md-craft-marketplace
 ```
+
+### Codex CLI
+
+Codex discovers skills under `~/.agents/skills/`. Clone the repo and symlink the skill:
+
+```bash
+git clone https://github.com/valetivivek/md-craft-skill.git ~/.codex/md-craft-skill
+mkdir -p ~/.agents/skills
+ln -s ~/.codex/md-craft-skill/skills/md-craft ~/.agents/skills/md-craft
+```
+
+Restart Codex so it picks up the new skill. Full steps, Windows instructions, and update/uninstall: [`.codex/INSTALL.md`](.codex/INSTALL.md).
 
 ## How it works
 

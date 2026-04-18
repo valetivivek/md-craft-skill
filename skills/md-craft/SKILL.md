@@ -181,7 +181,7 @@ Once the plan is approved, write the file. Follow these principles:
 
 - Match the tone you identified in Phase 1 and confirmed in Phase 2.
 - Don't invent marketing copy. If the project is described as "a small JSON diff tool" in CLAUDE.md, don't call it "the next generation of data transformation infrastructure."
-- Don't use em dashes (`—` or `--`). Use commas, periods, or parentheses instead. This is a hard rule for this skill.
+- Don't use em dashes (`—` or `--`) in the markdown files you write for the user. Use commas, periods, or parentheses instead. This is a hard rule for any output file. (The skill's own reference docs may use em dashes; the rule applies to generated project markdown, not this skill's internal prose.)
 - Avoid AI-slop phrasing: "seamlessly", "in the ever-evolving landscape", "revolutionize", "unlock", "leverage", "robust", "comprehensive solution". Write like a tired engineer describing their own project.
 
 **Formatting**

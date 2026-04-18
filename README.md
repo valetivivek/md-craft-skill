@@ -13,7 +13,7 @@ md-craft is the opposite default. It reads your project first (CLAUDE.md, packag
 Four-phase workflow on every markdown task:
 
 1. **Gather context.** Reads `CLAUDE.md`, `AGENTS.md`, the existing target file, package manifests, `docs/`, config files, and recent git log.
-2. **Style preview + ask.** Shows 2-3 short previews written with the project's actual details, then asks you to pick. No cold "what vibe do you want" questions.
+2. **Style preview + ask.** For READMEs, shows 2-3 short previews written with the project's actual details, then asks you to pick. Non-README files (PR templates, CONTRIBUTING, CHANGELOG, docs) use archetypes from their reference files instead of the preview picker.
 3. **Plan.** Section outline for new files, `KEEP / REWRITE / ADD / REMOVE` diff plan for updates. Approval required before writing.
 4. **Write.** Matched to the preset, the project's tone, and the quality bar.
 
@@ -37,7 +37,7 @@ To update later:
 /plugin marketplace update md-craft-marketplace
 ```
 
-Once installed, the skill triggers automatically on markdown requests. It does nothing until you confirm the style and plan, so you stay in control.
+Once installed, the skill triggers on markdown requests (README, PR template, CONTRIBUTING, CHANGELOG, docs). By default it asks for style and shows a plan before writing. For direct requests like "just write it" or tiny edits, it compresses or skips the ask step and tells you what it picked.
 
 ## What triggers it
 
@@ -59,7 +59,7 @@ It does not trigger for general questions about markdown syntax.
 | `README.md` | New or existing, Modern or Narrative preset, adaptive to project tone |
 | `.github/pull_request_template.md` | Sized to team: solo, small (4-15), strict review culture |
 | `CONTRIBUTING.md` | Audience-first (drive-by, regular, internal) |
-| `CHANGELOG.md` | Keep a Changelog, conventional-commits auto-gen, freeform release notes |
+| `CHANGELOG.md` | Keep a Changelog style, or freeform release notes. If the repo uses `release-please`, `changesets`, or `semantic-release`, the skill defers to those tools instead of hand-writing. |
 | `docs/**/*.md` | Folder structures, ADRs, guides, API reference pages |
 
 ## Contributing

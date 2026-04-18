@@ -25,7 +25,7 @@ md-craft ships as a Claude Code plugin via this marketplace.
 
 ```bash
 # Add the marketplace
-/plugin marketplace add cricky/md-craft-skill
+/plugin marketplace add valetivivek/md-craft-skill
 
 # Install the plugin
 /plugin install md-craft@md-craft-marketplace
@@ -52,29 +52,6 @@ Any request where the deliverable is a markdown file. Examples:
 
 It does not trigger for general questions about markdown syntax.
 
-## Repo layout
-
-```
-md-craft-skill/
-├── .claude-plugin/
-│   └── marketplace.json              # marketplace catalog
-├── plugins/
-│   └── md-craft/
-│       ├── .claude-plugin/
-│       │   └── plugin.json           # plugin manifest
-│       └── skills/
-│           └── md-craft/
-│               ├── SKILL.md          # main workflow, quality bar, four phases
-│               └── references/
-│                   ├── readme.md     # Modern + Narrative presets, hero patterns, anti-patterns
-│                   ├── pr-template.md
-│                   ├── contributing.md
-│                   ├── changelog.md
-│                   └── docs.md
-├── LICENSE
-└── README.md
-```
-
 ## Supported file types
 
 | File | What it does |
@@ -92,3 +69,7 @@ Issues and style-preset suggestions welcome. If you want to propose a new preset
 ## License
 
 MIT
+
+---
+
+<sub>This README was written by md-craft, using its own Modern preset. Dogfooded all the way down.</sub>

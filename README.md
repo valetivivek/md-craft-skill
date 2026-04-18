@@ -1,33 +1,23 @@
+<div align="center">
+
 # md-craft
 
-A Claude skill for writing and updating project markdown (README, PR templates, CONTRIBUTING, CHANGELOG, docs) that actually looks like it belongs to the project it's in.
+**You can spot AI-written markdown from a scroll away. md-craft is the opposite default.**
 
-## Why
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Version](https://img.shields.io/badge/version-1.0.0-black.svg)](.claude-plugin/plugin.json)
+[![Claude Code plugin](https://img.shields.io/badge/Claude_Code-plugin-8A2BE2.svg)](https://docs.claude.com/en/docs/claude-code/plugins)
 
-Most AI-generated markdown reads the same way: a generic badge row, a robotic "Features" list, an install section explaining what npm is, and a "Made with ❤️" footer. You can spot it from a scroll away.
+</div>
 
-md-craft is the opposite default. It reads your project first (CLAUDE.md, package manifests, docs, recent commits), asks you which of two style presets you want with short previews, shows a plan before it writes anything, and holds every draft to three checks: a reader understands the project in 10 seconds, can run it locally in 2 minutes, and knows if it's for them in the first paragraph.
+md-craft is a Claude Code skill for writing and updating project markdown (README, PR template, CONTRIBUTING, CHANGELOG, docs) in the voice your repo already has, not a generic AI-default one.
 
-## How it works
-
-Four-phase workflow on every markdown task:
-
-1. **Gather context.** Reads `CLAUDE.md`, `AGENTS.md`, the existing target file, package manifests, `docs/`, config files, and recent git log.
-2. **Style preview + ask.** For READMEs, shows 2-3 short previews written with the project's actual details, then asks you to pick. Non-README files (PR templates, CONTRIBUTING, CHANGELOG, docs) use archetypes from their reference files instead of the preview picker.
-3. **Plan.** Section outline for new files, `KEEP / REWRITE / ADD / REMOVE` diff plan for updates. Approval required before writing.
-4. **Write.** Matched to the preset, the project's tone, and the quality bar.
-
-Two README presets built in: **Modern** (clean, scannable, shadcn/Vercel vibe) and **Narrative** (story-driven, opinionated, personality-forward).
+It is for maintainers who already have a tone in their repo and don't want it overwritten by badge rows, "Features" bullets with three-word entries, install sections explaining what npm is, or "Made with heart" footers.
 
 ## Install
 
-md-craft ships as a Claude Code plugin via this marketplace.
-
 ```bash
-# Add the marketplace
 /plugin marketplace add valetivivek/md-craft-skill
-
-# Install the plugin
 /plugin install md-craft@md-craft-marketplace
 ```
 
@@ -37,11 +27,26 @@ To update later:
 /plugin marketplace update md-craft-marketplace
 ```
 
-Once installed, the skill triggers on markdown requests (README, PR template, CONTRIBUTING, CHANGELOG, docs). By default it asks for style and shows a plan before writing. For direct requests like "just write it" or tiny edits, it compresses or skips the ask step and tells you what it picked.
+## How it works
 
-## What triggers it
+1. **Read.** `CLAUDE.md`, `AGENTS.md`, the existing target file, package manifests, `docs/`, config files, recent git log.
+2. **Preview.** For READMEs, show two style previews (Modern and Narrative) written with your project's real details, then ask which fits.
+3. **Plan.** Section outline for new files, `KEEP / REWRITE / ADD / REMOVE` diff for updates. Approval gate.
+4. **Write.** Matched to the preset, your project's tone, and the quality bar below.
 
-Any request where the deliverable is a markdown file. Examples:
+Two README presets built in: **Modern** (clean, scannable, shadcn/Vercel vibe) and **Narrative** (story-driven, opinionated, personality-forward).
+
+## What it writes
+
+| File | What it does |
+| --- | --- |
+| `README.md` | New or existing, Modern or Narrative preset, adapts to project tone |
+| `.github/pull_request_template.md` | Sized to team: solo, small (4-15), strict review culture |
+| `CONTRIBUTING.md` | Audience-first (drive-by, regular, internal) |
+| `CHANGELOG.md` | Keep a Changelog style, or freeform release notes. If the repo uses `release-please`, `changesets`, or `semantic-release`, the skill defers to those tools instead of hand-writing. |
+| `docs/**/*.md` | Folder structures, ADRs, guides, API reference pages |
+
+## Use it for
 
 - "Write a README for this project"
 - "This README is messy, clean it up"
@@ -50,17 +55,21 @@ Any request where the deliverable is a markdown file. Examples:
 - "Add a changelog entry for v1.2.0"
 - "Fix my docs folder"
 
-It does not trigger for general questions about markdown syntax.
+Does not trigger for general questions about markdown syntax.
 
-## Supported file types
+## Quality bar
 
-| File | What it does |
-| --- | --- |
-| `README.md` | New or existing, Modern or Narrative preset, adaptive to project tone |
-| `.github/pull_request_template.md` | Sized to team: solo, small (4-15), strict review culture |
-| `CONTRIBUTING.md` | Audience-first (drive-by, regular, internal) |
-| `CHANGELOG.md` | Keep a Changelog style, or freeform release notes. If the repo uses `release-please`, `changesets`, or `semantic-release`, the skill defers to those tools instead of hand-writing. |
-| `docs/**/*.md` | Folder structures, ADRs, guides, API reference pages |
+Every generated README has to pass three checks before you see it:
+
+1. **10-second scan.** Reader understands the project from the hero plus first section.
+2. **2-minute local run.** From landing on the README to a working dev loop in two minutes.
+3. **First-paragraph audience filter.** Reader knows in the first paragraph whether this project is for them.
+
+Draft fails any check, the skill fixes it before showing you. No polished-but-hollow output.
+
+## Status
+
+v1.0.0. Two README presets, four other markdown file types, one opinionated quality bar. Tested by rewriting this README with itself, twice.
 
 ## Contributing
 
@@ -72,4 +81,4 @@ MIT
 
 ---
 
-<sub>This README was written by md-craft, using its own Modern preset. Dogfooded all the way down.</sub>
+<sub>Footnote: this README, and the one before it, were written by md-craft using its own presets. The original dogfood line at the bottom was an accidental add by Claude during generation. It stayed because it was funnier than anything on purpose.</sub>

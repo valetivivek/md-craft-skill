@@ -6,9 +6,9 @@ Reference for writing CONTRIBUTING.md files. Read this when the task involves a 
 
 Who's the audience? CONTRIBUTING.md serves three different groups, and writing for the wrong one makes the file useless:
 
-1. **External drive-by contributors** — they need: how to set up, what to avoid, how PRs work here.
-2. **Regular external contributors** — they need: coding conventions, release process, where to ask questions.
-3. **Internal team members** — they need: onboarding steps, where the hidden knowledge lives, who to ping.
+1. **External drive-by contributors** who need: how to set up, what to avoid, how PRs work here.
+2. **Regular external contributors** who need: coding conventions, release process, where to ask questions.
+3. **Internal team members** who need: onboarding steps, where the hidden knowledge lives, who to ping.
 
 Most open-source CONTRIBUTING.md files are written for group 1 but accidentally start addressing group 3. Pick one primary audience and make the file good for them. Link or link-mention the others.
 
@@ -57,7 +57,7 @@ CONTRIBUTING.md can carry personality when the project already has it. A warm op
 
 ## What to leave out
 
-- Code of conduct — link to CODE_OF_CONDUCT.md if separate.
-- License details — link to LICENSE.
+- Code of conduct: link to CODE_OF_CONDUCT.md if separate.
+- License details: link to LICENSE.
 - Long philosophy essays about software quality. Nobody reads these.
 - Exhaustive commit message grammars unless the project actually enforces one. If you have commitlint, say "we use conventional commits, see commitlint config" and stop.

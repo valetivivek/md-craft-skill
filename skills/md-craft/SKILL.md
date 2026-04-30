@@ -1,7 +1,7 @@
 ---
-name: md-craft
-description: Craft beautiful, professional markdown files — READMEs, PR templates, CONTRIBUTING, CHANGELOG, and general project docs — that match the project's existing tone and aesthetic. Use this skill whenever the user wants to write, generate, update, rewrite, polish, or "make better" any markdown file in a repo, even if they don't say "use md-craft." Trigger on phrases like "write a readme", "draft a PR template", "update the changelog", "fix my contributing guide", "my readme sucks", "generate docs for this project", or any request where the deliverable is a .md file that represents or describes a project. Also trigger when the user pastes an existing markdown file and asks to improve, clean up, or modernize it. The skill always gathers project context first (CLAUDE.md, package manifests, docs/, recent git log), always asks the user for style/tone preferences before writing, and always shows a plan/diff before touching any file.
----
+
+## name: md-craft
+description: Write or improve any project markdown file (README, PR template, CONTRIBUTING, CHANGELOG, docs). Use this skill automatically whenever the user asks to write, draft, generate, create, update, rewrite, polish, fix, clean up, modernize, or improve a .md file in a repo. Triggers include "write a readme", "draft a pr template", "update the changelog", "fix my contributing guide", "my readme sucks", "generate docs", "make a better readme", "make my profile readme", "animated readme", "showcase readme", "make it look cool", and any request whose deliverable is a markdown file describing a project. Also triggers when the user pastes an existing markdown file and asks to improve it. Picks a project-type archetype (library, cli, app, framework, side-project, showcase), matches the repo's existing tone, supports animated and visually-stunning showcase READMEs when the user asks for them, and remembers the choice in `.md-craft.json` so later runs in the same repo skip the style question.
 
 # md-craft
 
@@ -15,16 +15,14 @@ The goal of this skill is the opposite: markdown that reads like the maintainer 
 
 1. **The project decides the vibe, not the skill.** A minimal Vercel-style codebase gets a minimal README. A playful side project with a mascot gets personality. A serious enterprise repo gets dense, precise docs. Match the existing tone, don't overwrite it.
 2. **Context before keystrokes.** Never write a README without reading what the project actually is. Never update a CHANGELOG without looking at recent commits. Never draft a PR template without understanding what the team actually reviews.
-3. **User intent gates everything.** Ask for style/tone before writing. Show a plan before writing. Only write after approval.
+3. **User intent gates everything.** On first run in a repo, ask for archetype/tone before writing; on later runs, the saved choice in `.md-craft.json` answers silently. Always show a plan before writing. Always write after approval, never before.
 
 ## README quality bar
 
 A generated README is only done when all three of these are true. Measure against every draft before showing it to the user.
 
 1. **10-second scan.** A reader skimming the top of the file (hero + first section) should understand what the project is, who it's for, and whether it's alive. This means the hero needs a concrete tagline (not "a revolutionary tool for X"), and the first section has to commit to a point. If someone reads the first screenful and still doesn't know what the project does, the draft fails.
-
 2. **2-minute local run.** From landing on the README to a working dev loop: 2 minutes max. This means the install section is minimal prose around real commands, prerequisites are stated plainly (exact versions when they matter), and the quick-start example is the smallest thing that works. No "then configure your environment variables" without saying which ones.
-
 3. **First-paragraph audience filter.** The first paragraph of prose should make it obvious whether this project is for the reader. A library for internal Anthropic tooling says so. A side project says so. A production-grade tool says so. Readers shouldn't have to dig to find out they're in the wrong place.
 
 If a draft fails any of these, fix it before showing the user. Don't ship a README that looks polished but doesn't pass these tests.
@@ -45,21 +43,22 @@ If the user just asks a question about markdown syntax or wants to discuss what 
 
 ## The workflow
 
-Follow these four phases in order. Don't skip phases — each one exists because the phase before it doesn't produce enough signal on its own.
+Follow these five phases in order. Don't skip phases. Each one exists because the phase before it doesn't produce enough signal on its own.
 
 ### Phase 1: Gather project context
 
-Before asking the user anything, read what's available. This makes the style question in Phase 2 much more productive because you can say "I see this is a Next.js library with a minimal vibe — should I match that?" instead of asking cold.
+Before asking the user anything, read what's available. This makes Phase 2 much more productive because you can say "I see this is a Next.js library with a minimal vibe, should I match that?" instead of asking cold.
 
 Read, in order of priority, whichever exist:
 
-1. **CLAUDE.md** (or `.claude/CLAUDE.md`, `AGENTS.md`) — the single highest-signal file. Often contains project description, architecture, conventions, and tone hints.
-2. **Existing target file** — if updating a README, read the current README. Same for CHANGELOG, CONTRIBUTING, PR templates. The existing voice is the voice to match.
-3. **Package manifests** — `package.json`, `pyproject.toml`, `Cargo.toml`, `go.mod`. Pull name, description, version, dependencies, scripts.
-4. **Docs folder** — skim `docs/`, `ARCHITECTURE.md`, `DESIGN.md` if they exist. Don't read everything; look for structure and tone.
-5. **Config files** — `tsconfig.json`, `next.config.js`, `Dockerfile`, CI configs. Tells you the actual stack, not just the claimed stack.
-6. **Recent git log** — run `git log --oneline -30` (or `-50` for a CHANGELOG task). Pulls commit message style, recent features, and whether the team uses conventional commits.
-7. **Top-level file tree** — `ls` or equivalent. Tells you if it's a monorepo, what the entry points are, whether there's a `public/`, `examples/`, etc.
+1. `**.md-craft.json`** (at repo root): if present, this records the archetype, tone, visual element choices, and notes from past runs in this repo. Read it first; it answers most of Phase 2 silently. See `references/preferences-file.md` for the schema.
+2. **CLAUDE.md** (or `.claude/CLAUDE.md`, `AGENTS.md`): the single highest-signal file. Often contains project description, architecture, conventions, and tone hints.
+3. **Existing target file**: if updating a README, read the current README. Same for CHANGELOG, CONTRIBUTING, PR templates. The existing voice is the voice to match.
+4. **Package manifests**: `package.json`, `pyproject.toml`, `Cargo.toml`, `go.mod`. Pull name, description, version, dependencies, scripts.
+5. **Docs folder**: skim `docs/`, `ARCHITECTURE.md`, `DESIGN.md` if they exist. Don't read everything; look for structure and tone.
+6. **Config files**: `tsconfig.json`, `next.config.js`, `Dockerfile`, CI configs. Tells you the actual stack, not just the claimed stack.
+7. **Recent git log**: run `git log --oneline -30` (or `-50` for a CHANGELOG task). Pulls commit message style, recent features, and whether the team uses conventional commits.
+8. **Top-level file tree**: `ls` or equivalent. Tells you if it's a monorepo, what the entry points are, whether there's a `public/`, `examples/`, etc.
 
 Keep this phase fast. Don't read every file in `src/`. You're gathering signal, not auditing the codebase.
 
@@ -71,54 +70,107 @@ Produce an internal context summary (don't show it to the user verbatim unless t
 - Existing markdown conventions (emoji usage, heading depth, badge style, example density)
 - Anything unusual (monorepo, custom CLI, unusual license, branded naming)
 
-### Phase 2: Show style options with previews, then ask
+### Phase 2: Pick the archetype and tone (or skip if `.md-craft.json` already answered)
 
-Always ask. But don't ask cold. Based on Phase 1, pick 2-3 style directions that would actually work for this project and show a tiny preview of each so the user can feel the difference before committing. Asking without previews is the difference between "pick a color" and "pick from these swatches."
+This phase decides two things:
 
-For READMEs, there are two primary style presets. See `references/readme.md` for full specs and section templates.
+1. **Archetype**: which kind of project this is. Drives section structure and visual elements.
+2. **Tone**: how the prose sounds. Drives voice and word choice.
 
-**Modern** — clean structure, clear visual hierarchy, good for libraries, tools, and products where readers want to scan and get working fast. Think shadcn/ui, Radix, Drizzle, tRPC. Sections have earned purpose. Slight polish without decoration.
+#### If `.md-craft.json` exists
 
-**Narrative** — story-driven prose, personality-forward, good for opinionated tools, side projects with a point of view, and projects where the "why" matters as much as the "what." Think Pieter Levels' projects, sindresorhus essays-in-READMEs, tools that exist because the author had a specific complaint with the status quo.
+Skip the asking. Use the stored `archetype`, `tone`, `visual` overrides, and `notes` as the answer. Briefly tell the user what you're using so they can object cheaply:
 
-These are starting points, not cages. A Modern README can have a narrative opener; a Narrative README can have a clean stack table. Use the preset to set the center of gravity, then adapt.
+> Using your saved settings: **library** archetype, **modern-clean** tone, no emojis, npm + pnpm install commands. Going to Phase 3 next.
 
-**How to present options:**
+If the project has clearly changed since the file was written (e.g. archetype was `library` but the repo now has a `Dockerfile`, a `Procfile`, and a `web/` UI), surface the mismatch and offer to re-pick:
 
-Show a short preview (roughly 6-10 lines each) of what the hero + first section would look like in each style, for this specific project. Previews must be written using the project's actual details, not generic placeholders. Follow with a one-line question.
+> Your `.md-craft.json` says this is a **library**, but the repo now has a `web/` Next.js app and a `Dockerfile`. Want to switch to **app**, or keep library?
 
-Example presentation:
+Don't auto-change. Ask once, then update the file.
 
-> Based on what I see in CLAUDE.md, either of these would work. Short previews below so you can feel the difference:
+#### If `.md-craft.json` does not exist (first run in this repo)
+
+Pick the archetype yourself from Phase 1 signal, then confirm with the user using a short preview.
+
+**Archetype detection (rules of thumb):**
+
+
+| Signal                                                                                                                                                 | Likely archetype               |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------ |
+| `package.json` with `"main"` / `"exports"` and no UI                                                                                                   | Library                        |
+| `bin` field in `package.json`, or a `cmd/` Go folder                                                                                                   | CLI                            |
+| `next.config.js` / `vite.config.ts` + `public/` + `Dockerfile`                                                                                         | App / Product                  |
+| Many concepts in `docs/`, plus a docs site, plus comparison with alternatives in CLAUDE.md                                                             | Framework / Heavy tool         |
+| Single author, no CI, hobby vibe in CLAUDE.md or git log                                                                                               | Side-project                   |
+| Inside a monorepo, owned by a team, internal-only                                                                                                      | Side-project (internal flavor) |
+| Repo name matches the owner's GitHub username (profile README), or user said "animated" / "showcase" / "make it look cool" / "portfolio" / "hackathon" | Showcase                       |
+
+
+If two archetypes look plausible, present both. If one is clearly correct, present that one and a fallback.
+
+**Showcase is opt-in only.** Even if a project README would technically render with banners and typing animations, do not propose Showcase for libraries, CLIs, frameworks, apps, or internal repos unless the user explicitly asks for that flavor. Showcase fits profile READMEs, portfolios, hackathon submissions, and side projects whose author has asked for visual flair.
+
+**How to present:**
+
+Show one preview (6 to 10 lines) of the hero + first section in the chosen archetype, written with the project's real details. If you're presenting two options, show both. Follow with a one-line question.
+
+Example, single-archetype confirmation:
+
+> This looks like a **Library** archetype to me (npm package, single import surface, small API).
+> Quick preview of how the hero would land:
 >
-> **Option A — Modern**
 > ```md
 > # drift
 >
-> Typed environment variable loader for Node, 0 dependencies.
+> Typed environment variable loader for Node, zero dependencies.
 >
 > ```bash
 > npm install drift
 > ```
 >
-> ## Why
-> Most env loaders either do too much (secrets, rotation, multi-source merging) or too little (process.env as-is). Drift does one thing: typed vars with defaults, validated at load.
 > ```
 >
-> **Option B — Narrative**
+> Tone: modern-clean. Want me to go with this, or pick something else?
+> ```
+
+Example, two-option:
+
+> Could go two ways here. Short previews:
+>
+> **A. Library archetype, modern-clean tone**
+>
 > ```md
 > # drift
 >
-> I got tired of writing `process.env.PORT ? parseInt(process.env.PORT) : 3000` on every project. So I wrote drift.
->
-> It's 400 lines of TypeScript and it has one job: give you typed environment variables with sensible defaults, and fail loud at startup if something required is missing.
+> Typed environment variable loader for Node, zero dependencies.
 > ```
 >
-> Which one lands closer? Or mix and match?
+> **B. Side-project archetype, narrative tone**
+>
+> ```md
+> # drift
+>
+> I got tired of writing `process.env.PORT ? parseInt(...) : 3000` on every project. So I wrote drift.
+> ```
+>
+> Which lands closer?
 
-Wait for the answer. If the user says "just do it, you decide," proceed with whichever preset the project most suggests, and say which one you picked and why.
+Wait for the answer. If the user says "just do it, you decide," proceed with the most likely archetype and tone, and say which one you picked and why.
 
-For non-README files (PR template, CONTRIBUTING, CHANGELOG, docs), skip the preview-based picker. Those files don't have the same style fork — see their reference files for the archetypes that matter.
+After the choice is confirmed, read the matching file under `references/archetypes/` to get the structure and visual element toolkit before moving to Phase 3.
+
+#### Visual elements
+
+Each archetype's reference file has a "visual elements toolkit" listing what to include. Defaults are good for most projects. Ask the user only if a default is ambiguous for this project, e.g.:
+
+> The App archetype usually has a hero screenshot. Do you have one to include, or should I leave a placeholder?
+
+Don't ask about every possible toggle. Defaults plus one targeted question beats a long checklist.
+
+#### Non-README files
+
+For PR template, CONTRIBUTING, CHANGELOG, and docs, skip archetype selection. Those files don't have the same project-type fork; see their reference files for the patterns that matter.
 
 ### Phase 3: Show the plan before writing
 
@@ -129,13 +181,13 @@ Never go from "gathered context" straight to "wrote the file." Show a plan that 
 ```
 Plan for README.md:
 
-1. Hero        — project name, one-line tagline, install command
-2. Why         — two short paragraphs on what problem this solves
-3. Quick start — 3-step code block (install, configure, run)
-4. API         — table of the 4 main exports with link to docs/
-5. Examples    — link to examples/ folder, one inline snippet
-6. Contributing — link to CONTRIBUTING.md
-7. License     — MIT, one line
+1. Hero:         project name, one-line tagline, install command
+2. Why:          two short paragraphs on what problem this solves
+3. Quick start:  3-step code block (install, configure, run)
+4. API:          table of the 4 main exports with link to docs/
+5. Examples:     link to examples/ folder, one inline snippet
+6. Contributing: link to CONTRIBUTING.md
+7. License:      MIT, one line
 
 Roughly matching the current file's structure but adding Quick start and tightening the API section. Sound right?
 ```
@@ -156,7 +208,7 @@ REWRITE:
 
 ADD:
   - Quick start section after Install
-  - Badges row (build, npm version, license) — you mentioned wanting these
+  - Badges row (build, npm version, license), you mentioned wanting these
 
 REMOVE:
   - "Motivation" section (redundant with Why)
@@ -165,7 +217,7 @@ REMOVE:
 Want me to proceed, or adjust anything?
 ```
 
-Wait for confirmation. Accept corrections. Don't skip this step even for small files — small files are where over-eager changes hurt most.
+Wait for confirmation. Accept corrections. Don't skip this step even for small files; small files are where over-eager changes hurt most.
 
 ### Phase 4: Write the file
 
@@ -174,51 +226,77 @@ Once the plan is approved, write the file. Follow these principles:
 **Structure**
 
 - Use the sections you agreed to. Don't sneak in extras.
+- Follow the structure in the chosen archetype's reference file (`references/archetypes/<archetype>.md`).
 - Lead with whatever the reader needs most. For a library, that's usually an install command and a 5-line usage example. For a CLI, that's a GIF or a command example. For a CONTRIBUTING guide, that's the dev setup.
 - If the project is small, the file should be small. A 200-line README for a 300-line utility is noise.
 
 **Voice**
 
-- Match the tone you identified in Phase 1 and confirmed in Phase 2.
+- Match the tone confirmed in Phase 2 (`modern-clean`, `narrative-personal`, or `dry-operational`).
+- If `.md-craft.json` has `notes[]`, treat each note as an additional rule for this write. Notes from past corrections take precedence over generic archetype defaults.
 - Don't invent marketing copy. If the project is described as "a small JSON diff tool" in CLAUDE.md, don't call it "the next generation of data transformation infrastructure."
-- Don't use em dashes (`—` or `--`) in the markdown files you write for the user. Use commas, periods, or parentheses instead. This is a hard rule for any output file. (The skill's own reference docs may use em dashes; the rule applies to generated project markdown, not this skill's internal prose.)
+- Don't use em dashes (`—` or `--`) in the markdown files you write for the user. Use commas, periods, colons, or parentheses instead. This is a hard rule for any output file.
 - Avoid AI-slop phrasing: "seamlessly", "in the ever-evolving landscape", "revolutionize", "unlock", "leverage", "robust", "comprehensive solution". Write like a tired engineer describing their own project.
 
 **Formatting**
 
-- Use fenced code blocks with language tags (```ts, ```bash, ```py).
+- Use fenced code blocks with language tags (`ts`, `bash`, ````py`).
 - Keep headings shallow. `##` for top-level sections, `###` for subsections, avoid `####` unless the section is genuinely deep.
 - Tables are good for API references, feature comparisons, and config options. Don't force a table where a bullet list is clearer.
-- Badges are optional. If the project has no existing badges and isn't open-source-facing, skip them. If you use them, use shields.io and keep them to one row.
-- Emojis: use what the project already uses. If the existing file has no emojis, don't add them. If it uses a few as section anchors, match the pattern.
+- Badges follow the archetype default unless `.md-craft.json` overrides. If badges are on, use shields.io and keep them to one row.
+- Emojis: use what the project already uses, or follow the `.md-craft.json` setting. If the existing file has no emojis and there's no preference saved, don't add them.
 
 **File-type specifics**
 
 See `references/` for per-file guidance:
 
-- `references/readme.md` — README structure patterns, common sections, examples
-- `references/pr-template.md` — PR template patterns for different team sizes and workflows
-- `references/contributing.md` — CONTRIBUTING.md patterns
-- `references/changelog.md` — CHANGELOG conventions (Keep a Changelog, conventional commits, release-drift)
-- `references/docs.md` — docs/ folder structure and tone
+- `references/readme.md`: shared README guidance (hero, sections, anti-patterns, archetype router).
+- `references/archetypes/library.md`: Library archetype (npm/pip/cargo packages, SDKs).
+- `references/archetypes/cli.md`: CLI archetype (terminal tools, binaries).
+- `references/archetypes/app.md`: App / Product archetype (web apps, desktop, mobile, browser extensions).
+- `references/archetypes/framework.md`: Framework / Heavy tool archetype (frameworks, ORMs, design systems).
+- `references/archetypes/side-project.md`: Side-project / Internal archetype (hobby projects, internal monorepo packages).
+- `references/archetypes/showcase.md`: Showcase archetype (profile READMEs, portfolios, hackathon submissions; animated banners, typing SVGs, stats cards). Opt-in only.
+- `references/preferences-file.md`: `.md-craft.json` schema, evolution flow, edge cases.
+- `references/pr-template.md`: PR template patterns for different team sizes and workflows.
+- `references/contributing.md`: CONTRIBUTING.md patterns.
+- `references/changelog.md`: CHANGELOG conventions (Keep a Changelog, conventional commits, release-drift).
+- `references/docs.md`: `docs/` folder structure and tone.
 
-Read the relevant reference file before writing. Don't try to remember patterns from memory — the references have concrete examples.
+Read the relevant reference file before writing. Don't try to remember patterns from memory; the references have concrete examples.
 
-## After writing
+### Phase 5: Show, react, and capture taste
+
+Writing the file is not the last step. Two things still happen:
+
+**Show and iterate.**
 
 - Show the file to the user. Don't write it and disappear.
-- If the file is long (>150 lines), offer to walk through specific sections.
+- If the file is long (over 150 lines), offer to walk through specific sections.
 - Ask: "Anything you want to change?" Then iterate. Don't treat the first draft as final.
+
+**Capture taste back into `.md-craft.json`.**
+
+- **First run in a repo**: after the user accepts the file, write `.md-craft.json` with the chosen `archetype`, `tone`, any explicit `visual` choices, the `preferences` you used, and an empty `notes[]`. See `references/preferences-file.md` for the schema.
+- **Every run**: listen for two kinds of feedback and distill each into a one-line note appended to `notes[]`:
+  1. **In-chat corrections** ("drop the emojis," "make the install section shorter," "always include a pnpm command too").
+  2. **Post-write edits**: if the user edits the file before the next message, diff it against what you wrote. Material removals or rewrites are signal worth capturing.
+- Only capture things the user actually said or visibly changed. Don't invent notes.
+- Update `lastUpdated` on every write.
+- If `notes[]` exceeds 12 entries or contains contradictions, propose a consolidation in the next session. Don't consolidate silently.
 
 ## What this skill does not do
 
-- Generate fake content. If you don't know the install command, ask — don't make one up.
+- Generate fake content. If you don't know the install command, ask; don't make one up.
 - Add sections the user didn't approve. No sneaking in a "Star History" badge because it "looks good."
 - Restructure docs/ without explicit permission. You can suggest it; don't do it.
 - Write the full CHANGELOG from scratch by reading every commit in history. For CHANGELOG work, scope to a version range and ask.
 
 ## Quick escape hatches
 
-- User says "just write it, don't ask me": skip Phase 2 and Phase 3, but still do Phase 1. Tell them which direction you picked.
-- User pastes an existing file with "improve this": Phase 1 is just reading the file and its context. Phase 2 becomes "what specifically bothers you about it?" Phase 3 is a diff plan.
-- User asks for something tiny ("add a license section"): compress all four phases into one message. Still ask once before writing if there's any ambiguity.
+- `**.md-craft.json` already exists**: skip the Phase 2 question. Announce the saved settings in one line, then go to Phase 3.
+- **User says "just write it, don't ask me"**: skip Phase 2 and Phase 3, but still do Phase 1. Tell them which direction you picked. Still write `.md-craft.json` so the next run is consistent.
+- **User pastes an existing file with "improve this"**: Phase 1 is just reading the file and its context. Phase 2 becomes "what specifically bothers you about it?" Phase 3 is a diff plan.
+- **User asks for something tiny ("add a license section")**: compress all phases into one message. Still ask once before writing if there's any ambiguity.
+- **Running in CI or any non-interactive context**: read `.md-craft.json` if it exists, but never write to it. Writing requires user confirmation; CI has no user.
+

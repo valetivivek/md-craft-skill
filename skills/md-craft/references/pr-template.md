@@ -98,4 +98,4 @@ For repos that make heavy use of `.github/PULL_REQUEST_TEMPLATE/` directory with
 
 ## Multiple templates
 
-GitHub supports `.github/PULL_REQUEST_TEMPLATE/` as a directory with multiple templates (feature.md, bugfix.md, chore.md). Suggest this only if the user confirms they want it — most repos are fine with one template.
+GitHub supports `.github/PULL_REQUEST_TEMPLATE/` as a directory with multiple templates (feature.md, bugfix.md, chore.md). Suggest this only if the user confirms they want it; most repos are fine with one template.

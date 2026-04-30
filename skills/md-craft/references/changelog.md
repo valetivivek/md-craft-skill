@@ -8,7 +8,7 @@ Three conventions dominate. Look at the existing file (if any) and commit style 
 
 ### Keep a Changelog
 
-Most common. Human-readable, opinionated, works for any project. https://keepachangelog.com
+Most common. Human-readable, opinionated, works for any project. [https://keepachangelog.com](https://keepachangelog.com)
 
 ```md
 # Changelog
@@ -36,7 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Default timeout increased from 5s to 30s
 
 ### Deprecated
-- `legacyParse()` — use `parse()` instead, will be removed in 2.0.0
+- `legacyParse()`: use `parse()` instead, will be removed in 2.0.0
 
 ### Removed
 ### Fixed
@@ -100,3 +100,4 @@ Don't invent entries that aren't in the commit log. If the user says "release v1
 - Marketing language. Changelogs are operational documents.
 - Entries without dates on released versions.
 - Silent breaking changes. Always flag breaking changes explicitly, usually under **Changed** with a `**BREAKING**:` prefix, or with a separate note.
+

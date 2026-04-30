@@ -1,0 +1,35 @@
+{
+  "name": "md-craft-marketplace",
+  "owner": {
+    "name": "Vishnu Vivek Valeti"
+  },
+  "metadata": {
+    "description": "Distribution marketplace for md-craft, an Agent Skill for writing project markdown files that match the project's own tone."
+  },
+  "plugins": [
+    {
+      "name": "md-craft",
+      "source": "./",
+      "description": "Write and update project markdown (README, PR template, CONTRIBUTING, CHANGELOG, docs) that matches the project's existing tone. Picks a project-type archetype (library, cli, app, framework, side-project, showcase), reads CLAUDE.md / AGENTS.md and git context, supports animated and visually-striking showcase READMEs for profiles and portfolios, remembers style choices in .md-craft.json so later runs skip the style question, and shows a diff plan before writing.",
+      "version": "1.1.0",
+      "author": {
+        "name": "Vishnu Vivek Valeti"
+      },
+      "homepage": "https://github.com/valetivivek/md-craft-skill",
+      "repository": "https://github.com/valetivivek/md-craft-skill",
+      "license": "MIT",
+      "category": "development",
+      "keywords": [
+        "markdown",
+        "readme",
+        "documentation",
+        "pr-template",
+        "changelog",
+        "contributing",
+        "writing",
+        "profile-readme",
+        "showcase"
+      ]
+    }
+  ]
+}

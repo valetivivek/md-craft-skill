@@ -44,7 +44,7 @@ The `decisions/` folder is an ADR (Architecture Decision Records) pattern. Usefu
 
 ```
 docs/
-├── README.md           — landing page, who owns this, where to get help
+├── README.md           # landing page, who owns this, where to get help
 ├── runbooks/
 │   ├── deploy.md
 │   └── rollback.md

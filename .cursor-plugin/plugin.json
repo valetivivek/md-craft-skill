@@ -1,0 +1,22 @@
+{
+  "name": "md-craft",
+  "version": "1.1.0",
+  "description": "Write and update project markdown (README, PR template, CONTRIBUTING, CHANGELOG, docs) that matches the project's existing tone. Picks a project-type archetype (library, cli, app, framework, side-project, showcase), reads CLAUDE.md / AGENTS.md and git context, supports animated and visually-striking showcase READMEs for profiles and portfolios, remembers style choices in .md-craft.json so later runs skip the style question, and shows a diff plan before writing.",
+  "author": {
+    "name": "Vishnu Vivek Valeti"
+  },
+  "homepage": "https://github.com/valetivivek/md-craft-skill",
+  "repository": "https://github.com/valetivivek/md-craft-skill",
+  "license": "MIT",
+  "keywords": [
+    "markdown",
+    "readme",
+    "documentation",
+    "pr-template",
+    "changelog",
+    "contributing",
+    "writing",
+    "profile-readme",
+    "showcase"
+  ]
+}
